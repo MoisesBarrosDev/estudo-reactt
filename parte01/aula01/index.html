@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>React para Iniciantes</title>
+
+  <!-- Carrega o React, React Dom e Babel -->
+  <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+
+  <!-- Don't use this in production: -->
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+</head>
+
+<body>
+  <!-- Aqui estamos criando uma div, aonde vai ter toda nossa aplicação -->
+  <div id="root"></div>
+
+  <!-- Aqui estamos chamando o script, e colocando nele o type="text/babel", para que funcione o JSX (JavaScript XML) isso
+   é uma sintaxe que permite escrever HTML dentro do JavaScript, parace com HTML, Mas está dentro do JavaScript, 
+   O JSX não é entendido diretamente pelos navegadores, então ele é transformado por isso estamos usando o type="text/babel" para que o 
+   babel faça essa compilação.
+  -->
+  <script type="text/babel">
+
+    /*
+    Aqui estamos criando um componente, oque é um componente? componente são funções que Permitem você dividir a sua interface em pequenos elementos. 
+    São criados através de funções que retornam elementos React.
+    */
+    const Button = () => {
+      return <button>Comprar</button>
+    }
+
+    /*
+    Aqui estamos criando um outro componente que se chama  MainNav, repare que é normal usar letras Maiusculas na criação desses componentes, por que?
+    poque serve para diferenciar dos elementos HTML. Perceba que nesse componente MainNav estamos criando uma navegação com elementos HTML, com <nav>,<ul>,
+    <li>, <a>
+    */
+    const MainNav = () => {
+      return <nav>
+        <ul>
+          <li>
+            <a href="#">Link 1</a>
+          </li>
+          <li>
+            <a href="#">Link 2</a>
+          </li>
+        </ul>
+      </nav>
+    }
+
+
+    /*
+    estamos criando um componente chamado Produtos(), dentro dele existe 3 variaveis. 1 Variavel retorna um produto chamado 'camisa',
+     a 2 variavel retorna um produto chamado 'Bermuda', e a 3 variavel retorna um objeto Math, que retorna um numero aleatorio.
+    */
+    const Produtos = () => {
+      const produto1 = 'Camisa'
+      const produto2 = 'Bermuda'
+      const value = Math.random()
+
+      // dentro do componente Produtos, criamos uma função com o parametro 'event', que vai aparecer no console o botão que foi clicado junto com o texto que tem no butão.
+      const handleClick = (event) => {
+        console.log(`Comprou: ${event.target.innerText}`)
+      }
+      // diferentemente do JS, quando queremos colocar um evento no button, temos que colocar diretamente na tag, e para chamamos alguma função
+      // temos que colocar = {}, se não colocar não chama. exemplo: onClick={handleClick}, chamei o evento e coloquei que quando fosse clicado 
+      // retornasse a função. dentro do button chamamos o produto1 que é = camisa, e pegamos o objeto Math, e encadeamos o método .round, que significa =
+      // 'arredonde' mas arredondar oque? o valor que está dentro da varivael value, que é um numero aleatorio, vezes o número 100, assim so vai gerar 
+      // números interos e não quebrados. exemplo: {Math.round(value * 100)}. perceba que a todo momento se quiser chamar qualquer coisa pra dentro do elemento 
+      // HTML é nescessario as {}.
+      return <div>
+        <button onClick={handleClick}>Comprar {produto1} - R$ {Math.round(value * 100)}</button>
+        <button onClick={handleClick} >Comprar {produto2} - R$ {Math.round(value * 100)}</button>
+      </div>
+    }
+
+
+    /*
+    Aqui abaixo estamos criando um componente chamado Compras(). dentro desse componente perceba  que estamos fazendo uma desestruturação de array
+    com os objetos 'count' -> que é o contador. E o 'setCount' -> que é uma função. E de onde eles estão vindo? Estão vindo do  React.useState(0).
+    oque significa o  React.useState(0)? useState é um Hook que define uma variável reativa, esse 0, é como o contador vai começar, no caso vai começar pelo
+    número 0.  A função: const handleClick = () => {setCount(count + 1)} -> oque está acontecendo aqui? é simples, o  setCount(count + 1) ele está setando o
+    valor atual do contador(count) e adicionando mais 1. e aí quando clicar no button: <button onClick={handleClick}>Comprar: {count}</button>  por causa
+    do handleClick , vai pegar o estado atual e vai indo adicionando + 1, o {count}, amostra a quantidade atual do contador.
+    Já aqui  <p>Preço: {count * 250}</p> oque está acontecendo? ele está pegando o estado atual do contador e multiplicando por 250. 
+    exemplo : 
+    1 * 250 = 250
+   (count) * 250 = 250. porque o resultado é 250? porque o estado atual dele é 1. 1 vezes 250 dá = 250 
+    */
+    const Compras = () => {
+      const [count, setCount] = React.useState(0)
+      const handleClick = () => {
+        setCount(count + 1)
+      }
+
+      return <div>
+        <button onClick={handleClick}>Comprar: {count}</button>
+        <p>Total: {count}</p>
+        <p>Preço: {count * 250}</p>
+      </div>
+    }
+
+    /*
+    Aqui criamos um componente que se chama App(), ele é o nosso componente princpal, pois é atraves dele que pegamos todos os demais componentes e agrupamos.
+    pereceba que para colocar os  demais componentes  dentro do principal, é so chamar eles colocando primeiramente < e o nome o componente /> 
+    */
+    const App = () => {
+      return <div>
+        <h1>Teste</h1>
+        <MainNav />
+        <Produtos />
+        <Compras />
+      </div>
+    }
+    
+    // Aqui estamos chamando aquela div inicial que está no escopo HTML
+    const container = document.getElementById('root')
+    // Aqui criamos uma variavel que se chama root. Mas o ReactDOM.createRoot(container) -> Crie uma raiz React dentro do elemento HTML chamado container.
+    // Que no caso é aquela div inicial. 
+    const root = ReactDOM.createRoot(container)
+     
+    // Aqui pegamos a Raiz react dentro do elemento container(div) e pedidndo pra renderizar o nosso componente(App) dentro dessa div.
+    root.render(<App />)
+  </script>
+</body>
+
+</html>
